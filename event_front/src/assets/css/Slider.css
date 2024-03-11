@@ -1,0 +1,8 @@
+.custom-slider {
+    margin: 0 -10px; /* Adjust the negative margin as needed */
+  }
+  
+  .custom-slider .slick-slide {
+    padding: 0 10px; /* Adjust the padding as needed */
+  }
+  
