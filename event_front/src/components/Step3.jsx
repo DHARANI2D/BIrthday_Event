@@ -40,7 +40,7 @@ const Step3 = ({ handleNextPrevClick }) => {
 
   const handleNextStep = () => {
     if (selectedPhotographyServiceId) {
-      handleNextPrevClick(4); // Assuming Step4 is the next step
+      handleNextPrevClick(5); // Assuming Step4 is the next step
     } else {
       alert('Please select a photography service.');
     }

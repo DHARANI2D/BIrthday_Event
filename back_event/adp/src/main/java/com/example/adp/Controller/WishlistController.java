@@ -14,12 +14,12 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins="*")
 @RequestMapping("/api/wishlists")
 public class WishlistController {
 
     private WishlistService wishlistService;
 
-    @PreAuthorize("hasAuthority('USER')")
     @PostMapping
     public ResponseEntity<WishlistDto> createWishlistItem(@RequestBody WishlistDto wishlistDto) {
         WishlistDto savedWishlistItem = wishlistService.createWishlistItem(wishlistDto);
@@ -38,21 +38,18 @@ public class WishlistController {
         return ResponseEntity.ok(wishlistItems);
     }
     
-    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<WishlistDto>> getWishlistItemsByUserId(@PathVariable("userId") Long userId) {
         List<WishlistDto> wishlistItems = wishlistService.getWishlistItemsByUserId(userId);
         return ResponseEntity.ok(wishlistItems);
     }
     
-    @PreAuthorize("hasAuthority('USER')")
     @PutMapping("{id}")
     public ResponseEntity<WishlistDto> updateWishlistItem(@PathVariable("id") Long wishlistItemId, @RequestBody WishlistDto wishlistDto) {
         WishlistDto updatedWishlistItem = wishlistService.updateWishlistItem(wishlistItemId, wishlistDto);
         return ResponseEntity.ok(updatedWishlistItem);
     }
 
-    @PreAuthorize("hasAuthority('USER')")
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteWishlistItem(@PathVariable("id") Long wishlistItemId) {
         wishlistService.deleteWishlistItem(wishlistItemId);

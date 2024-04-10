@@ -16,6 +16,7 @@ const Step2 = ({ handleNextPrevClick }) => {
           }
         });
         setDecorations(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching decorations:', error);
       }
@@ -26,10 +27,16 @@ const Step2 = ({ handleNextPrevClick }) => {
 
   useEffect(() => {
     const selectedDecorationIdFromCookie = Cookies.get('Step2');
-    if (selectedDecorationIdFromCookie) {
-      const { id } = JSON.parse(selectedDecorationIdFromCookie);
-      setSelectedDecorationId(parseInt(id));
-    }
+      console.log('Selected Decoration ID from Cookie:', selectedDecorationIdFromCookie);
+      if (selectedDecorationIdFromCookie) {
+        try {
+          const { id } = JSON.parse(selectedDecorationIdFromCookie); // Line 31
+          setSelectedDecorationId(parseInt(id));
+        } catch (error) {
+          console.error('Error parsing cookie value as JSON:', error);
+        }
+      }
+
   }, []);
 
   const handleSelectDecoration = (decoration) => {
@@ -40,7 +47,7 @@ const Step2 = ({ handleNextPrevClick }) => {
 
   const handleNextStep = () => {
     if (selectedDecorationId) {
-      handleNextPrevClick(3);
+      handleNextPrevClick(4);
     } else {
       alert('Please select a decoration.');
     }

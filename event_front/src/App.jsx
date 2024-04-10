@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Cake from '/Users/dharanidharansenthilkumar/Projects/event_management/FRONTEND/event_front/src/assets/images/cake.gif'
+import Cake from 'event_front/src/assets/images/cake.gif'
 import ReturnGifts from './pages/ReturnGifts';
 import Photography from './pages/Photography';
 import Food from './pages/Food';

@@ -4,7 +4,8 @@ import { Card } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 
 const token = Cookies.get('token');
-const userId =Cookies.get('userId');
+const usernameu = Cookies.get('username');
+const profileImageUrl = usernameu ? `src/assets/images/Profile/${usernameu}.jpg` : '';
 
 const Admin = () => {
   const [adminData, setAdminData] = useState({});
@@ -20,7 +21,6 @@ const Admin = () => {
       console.error('Failed to fetch admin data', error);
     }
   };
-
   useEffect(() => {
     fetchAdminData(1); // replace 1 with actual userId
   }, []);
@@ -30,7 +30,7 @@ const Admin = () => {
       <Card style={{ width: '50%', marginBottom: '20px' }}>
         <Card.Body className="d-flex justify-content-between align-items-center">
           <div>
-            <Card.Title>Current User</Card.Title>
+            <Card.Title>Current Admin</Card.Title>
             <Card.Text>
               <strong>ID:</strong> {adminData.id}
             </Card.Text>
@@ -50,11 +50,7 @@ const Admin = () => {
               <strong>Roles:</strong> {adminData.roles}
             </Card.Text>
           </div>
-          <img
-            src="img.com" 
-            alt="Admin Profile"
-            style={{ marginLeft: '20px', border: '1px solid black', width: '100px', height: '100px' }}
-          />
+          <img src={profileImageUrl} alt="Profile" style={{ width: '150px', height: '150px' }} />
         </Card.Body>
       </Card>
     </div>

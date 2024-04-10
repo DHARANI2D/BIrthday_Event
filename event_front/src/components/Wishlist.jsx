@@ -3,14 +3,14 @@ import { Card, Carousel } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
-  const userId = 5;
-  useEffect(() => {
+  const userId = Cookies.get('userId');
+  const token = Cookies.get('token');
+  console.log(userId);  useEffect(() => {
     fetchWishlistItemsByUserId(userId); 
   }, []); 
 
   const fetchWishlistItemsByUserId = (userId) => {
     // Replace 'token' with the actual token received from authentication
-    const token = Cookies.get('token'); 
     fetch(`http://localhost:8181/api/wishlists/user/${userId}`, {
       headers: {
         'Authorization': `Bearer ${token}`

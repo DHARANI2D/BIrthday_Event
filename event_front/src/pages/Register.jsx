@@ -245,6 +245,12 @@ const Register = () => {
                     {formErrors.city}
                   </Form.Control.Feedback>
                 </Form.Group><br />
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={handleCheckboxChange}
+                />
+                <label>Accept Terms and Conditions</label>
                 <div className="d-flex align-items-center justify-content-center">
               <Button variant="primary" type="submit" className="w-100">
                 Register

@@ -40,7 +40,7 @@ const Step4 = ({ handleNextPrevClick }) => {
 
   const handleNextStep = () => {
     if (selectedCakeId) {
-      handleNextPrevClick(5);
+      handleNextPrevClick(6);
     } else {
       alert('Please select a cake service.');
     }

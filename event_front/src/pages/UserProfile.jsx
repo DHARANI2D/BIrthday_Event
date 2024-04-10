@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Button, Form, Col, Row } from 'react-bootstrap';
 import NavbarComponent from '../components/NavbarComponent';
 import OrderDetails from '../components/OrderDetails';
@@ -10,6 +10,9 @@ import Cookies from 'js-cookie';
 const User = () => {
   const [userData, setUserData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const userId = Cookies.get('userId');
+  const token = Cookies.get('token');
+  console.log(userId);
   const [updatedUserData, setUpdatedUserData] = useState({
     name: '',
     email: '',
@@ -64,8 +67,8 @@ const User = () => {
 
   const handleUpdateUser = async () => {
     try {
-      const userId = Cookies.get('userId');
-      const token = Cookies.get('token');
+      
+
 
       if (!userId || !token) {
         // Handle case where user is not authenticated

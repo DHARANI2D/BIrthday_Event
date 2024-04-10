@@ -39,7 +39,7 @@ const Step7 = ({ handleNextPrevClick }) => {
 
   const handleNextStep = () => {
     if (selectedFoodId) {
-      handleNextPrevClick(8);
+      handleNextPrevClick(9);
     } else {
       alert('Please select a food.');
     }

@@ -4,6 +4,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import { FaHeart } from 'react-icons/fa';
 import NavbarComponent from '../components/NavbarComponent';
 import Footer from '../components/FooterMain';
+
 const Venues = () => {
   const [venues, setVenues] = useState([]);
   const userId = Cookies.get('userId'); // replace 'userId' with the name of your cookie
@@ -30,9 +31,10 @@ const Venues = () => {
             // update the wishlisted property of the venues that are in the wishlist
             const wishlistedVenueIds = wishlistData.map(item => item.venueId);
             setVenues(venuesData.map(venue => ({ ...venue, wishlisted: wishlistedVenueIds.includes(venue.id) })));
-          });
+          })
+          .catch(error => console.error('Error fetching wishlist data:', error));
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch(error => console.error('Error fetching venues data:', error));
   }, [userId]);
 
   const handleWishlistClick = (venue) => {
@@ -72,40 +74,36 @@ const Venues = () => {
         })
         .catch(error => console.error('Error adding wishlist item:', error));
     }
+    console.log(venue.location);
   };
 
   return (
     <Container>
       <NavbarComponent />
-      {venues.reduce((acc, venue, index) => {
-        if (index % 4 === 0) acc.push([]);
-        acc[acc.length - 1].push(venue);
-        return acc;
-      }, []).map((venuesRow, index) => (
-        <Row key={index} className="mb-4">
-          {venuesRow.map((venue) => (
-            <Col key={venue.id} md={3}>
-              <Card className="mt-4">
-                <Card.Img variant="top" src={venue.imageUrl} />
-                <Card.Body>
-                  <Card.Title>{venue.name}</Card.Title>
-                  <Card.Text>
-                    <strong>Location:</strong> {venue.location}
-                    <br />
-                    <strong>Capacity:</strong> {venue.capacity}
-                    <br />
-                    <strong>Price:</strong> {venue.price}
-                    <br />
-                    <strong>Available:</strong> {venue.available ? 'Yes' : 'No'}
-                  </Card.Text>
-                  <FaHeart onClick={() => handleWishlistClick(venue)} color={venue.wishlisted ? 'red' : 'grey'} />
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      ))}
-      <Footer/>
+      <Row>
+        {venues.map(venue => (
+          <Col key={venue.id} md={3}>
+            <Card className="mt-4">
+              <Card.Img variant="top" src={venue.imageUrl} height={'250'} width={'250'}/>
+
+              <Card.Body>
+                <Card.Title>{venue.name}</Card.Title>
+                <Card.Text>
+                  <strong>Location:</strong> {venue.location}
+                  <br />
+                  <strong>Capacity:</strong> {venue.capacity}
+                  <br />
+                  <strong>Price:</strong> {venue.price}
+                  <br />
+                  <strong>Available:</strong> {venue.available ? 'Yes' : 'No'}
+                </Card.Text>
+                <FaHeart onClick={() => handleWishlistClick(venue)} color={venue.wishlisted ? 'red' : 'grey'} />
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+      <Footer />
     </Container>
   );
 };

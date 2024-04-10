@@ -7,55 +7,54 @@ import Footer from '../components/FooterMain';
 
 const Decoration = () => {
   const [decorations, setDecorations] = useState([]);
-  const userId = Cookies.get('userId'); // replace 'userId' with the name of your cookie
+  const userId = Cookies.get('userId');
 
   useEffect(() => {
-    const token = Cookies.get('token'); // replace 'token' with the name of your cookie
+    const fetchDecorations = async () => {
+      try {
+        const token = Cookies.get('token');
 
-    // Fetch the decorations
-    fetch('http://localhost:8181/api/decorations', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-      .then(response => response.json())
-      .then(decorationData => {
-        // Fetch the wishlist for the current user and category 'Decoration'
-        fetch(`http://localhost:8181/api/wishlists/user/${userId}?category=Decoration`, {
+        const decorationsResponse = await fetch('http://localhost:8181/api/decorations', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
-        })
-          .then(response => response.json())
-          .then(wishlistData => {
-            // Update the wishlisted property of the decorations that are in the wishlist
-            const wishlistedDecorationIds = wishlistData.map(item => item.decorationId);
-            setDecorations(decorationData.map(decoration => ({ ...decoration, wishlisted: wishlistedDecorationIds.includes(decoration.id) })));
-          });
-      })
-      .catch(error => console.error('Error fetching data:', error));
+        });
+
+        if (!decorationsResponse.ok) {
+          throw new Error('Failed to fetch decorations');
+        }
+
+        const decorationData = await decorationsResponse.json();
+
+        const wishlistResponse = await fetch(`http://localhost:8181/api/wishlists/user/${userId}?category=Decoration`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!wishlistResponse.ok) {
+          throw new Error('Failed to fetch decoration wishlist');
+        }
+
+        const wishlistData = await wishlistResponse.json();
+
+        const wishlistedDecorationIds = wishlistData.map(item => item.decorationId);
+        setDecorations(decorationData.map(decoration => ({ ...decoration, wishlisted: wishlistedDecorationIds.includes(decoration.id) })));
+
+      } catch (error) {
+        console.error('Error fetching decoration data:', error);
+      }
+    };
+
+    fetchDecorations();
   }, [userId]);
 
-  const handleWishlistClick = (decoration) => {
-    const token = Cookies.get('token'); // replace 'token' with the name of your cookie
+  const handleWishlistClick = async (decoration) => {
+    try {
+      const token = Cookies.get('token');
 
-    if (decoration.wishlisted) {
-      // If the decoration is already in the wishlist, send a DELETE request
-      fetch(`http://localhost:8181/api/wishlists/${decoration.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-        .then(() => {
-          // Update the decoration's wishlisted status in the state
-          setDecorations(decorations.map(d => d.id === decoration.id ? { ...d, wishlisted: false } : d));
-        })
-        .catch(error => console.error('Error deleting wishlist item:', error));
-    } else {
-      // If the decoration is not in the wishlist, send a POST request
-      fetch('http://localhost:8181/api/wishlists', {
-        method: 'POST',
+      const response = await fetch(`http://localhost:8181/api/wishlists/${decoration.id}`, {
+        method: decoration.wishlisted ? 'DELETE' : 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
@@ -66,12 +65,16 @@ const Decoration = () => {
           imgUrl: decoration.imageUrl,
           userId
         })
-      })
-        .then(() => {
-          // Update the decoration's wishlisted status in the state
-          setDecorations(decorations.map(d => d.id === decoration.id ? { ...d, wishlisted: true } : d));
-        })
-        .catch(error => console.error('Error adding wishlist item:', error));
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to ${decoration.wishlisted ? 'remove' : 'add'} decoration wishlist item`);
+      }
+
+      setDecorations(decorations.map(d => d.id === decoration.id ? { ...d, wishlisted: !decoration.wishlisted } : d));
+
+    } catch (error) {
+      console.error(`Error ${decoration.wishlisted ? 'removing' : 'adding'} decoration wishlist item:`, error);
     }
   };
 

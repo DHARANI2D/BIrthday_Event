@@ -40,7 +40,7 @@ const Step5 = ({ handleNextPrevClick }) => {
 
   const handleNextStep = () => {
     if (selectedEntertainmentServiceId) {
-      handleNextPrevClick(6);
+      handleNextPrevClick(7);
     } else {
       alert('Please select an entertainment service.');
     }

@@ -39,7 +39,7 @@ const Step6 = ({ handleNextPrevClick }) => {
   
   const handleNextStep = () => {
     if (selectedReturnGiftId) {
-      handleNextPrevClick(7);
+      handleNextPrevClick(8);
     } else {
       alert('Please select a return gift.');
     }

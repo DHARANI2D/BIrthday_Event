@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Table, Button, Modal, Form } from 'react-bootstrap';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -29,13 +29,14 @@ const OrderPanel = () => {
 
   const handleEditStatus = async () => {
     try {
-      await axios.put(`http://localhost:8181/api/carts/${selectedOrder.id}`, { status });
+      await axios.put(`http://localhost:8181/api/carts/${selectedOrder.id}`, { status: status, orderId: selectedOrder.orderId });
       fetchOrders();
       handleClose();
     } catch (error) {
       console.error(error);
     }
   };
+   
 
   const handleClose = () => {
     setShowModal(false);

@@ -1,18 +1,22 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { Container, Row, Col, Table, Card, Button } from 'react-bootstrap';
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import '../assets/css/Pay.css';
 import axios from 'axios';
-const SummaryCheckoutPage = () => {
+
+const Step8 = () => {
   const [subtotal, setSubtotal] = useState(0);
   const [taxCharges, setTaxCharges] = useState(0);
   const [grandTotal, setGrandTotal] = useState(0);
   const [showOverlay, setShowOverlay] = useState(false);
   const [showPaymentOverlay, setShowPaymentOverlay] = useState(false);
   const [orderId, setOrderId] = useState('');
-  const token =Cookies.get('token');
+  const [selectedDate, setSelectedDate] = useState('');
+
+  const token = Cookies.get('token');
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
   const selectedVenues = Cookies.get('Step1') ? JSON.parse(Cookies.get('Step1')) : null;
   const selectedDecorations = Cookies.get('Step2') ? JSON.parse(Cookies.get('Step2')) : null;
   const selectedPhotographyService = Cookies.get('Step3') ? JSON.parse(Cookies.get('Step3')) : null;
@@ -20,6 +24,13 @@ const SummaryCheckoutPage = () => {
   const selectedEntertainmentService = Cookies.get('Step5') ? JSON.parse(Cookies.get('Step5')) : null;
   const selectedReturnGift = Cookies.get('Step6') ? JSON.parse(Cookies.get('Step6')) : null;
   const selectedFood = Cookies.get('Step7') ? JSON.parse(Cookies.get('Step7')) : null;
+
+  useEffect(() => {
+    const storedDate = Cookies.get('selectedDate');
+    if (storedDate) {
+      setSelectedDate(new Date(storedDate).toLocaleDateString());
+    }
+  }, []);
 
   // Calculate subtotal
   useEffect(() => {
@@ -33,7 +44,7 @@ const SummaryCheckoutPage = () => {
     if (selectedFood) total += parseFloat(selectedFood.price);
     setSubtotal(total);
   }, [selectedVenues, selectedDecorations, selectedPhotographyService, selectedCakes, selectedEntertainmentService, selectedReturnGift, selectedFood]);
-  
+
   // Calculate tax charges and grand total
   useEffect(() => {
     const taxRate = 0.1; // 10% tax rate (adjust as needed)
@@ -41,15 +52,13 @@ const SummaryCheckoutPage = () => {
     setTaxCharges(tax);
     setGrandTotal(subtotal + tax);
   }, [subtotal]);
-  const orderId1 = Math.floor(100000 + Math.random() * 900000);
-  const user = Cookies.get('userId');
-  console.log(user);
+
   // Prepare data to be sent to the backend
   const handleProceedToCart = async () => {
     try {
       // Get the IDs of the categories from cookies
       const categoryIds = {
-        orderId: orderId1,
+        orderId: Math.floor(100000 + Math.random() * 900000),
         cake: selectedCakes.id,
         venue: selectedVenues.id,
         photography: selectedPhotographyService.id,
@@ -58,12 +67,12 @@ const SummaryCheckoutPage = () => {
         decorations: selectedDecorations.id,
         gift: selectedReturnGift.id,
         status: 1,
-        userid: user
+        userid: Cookies.get('userId')
       };
-  
+
       // Send category IDs to the backend to create a cart item
       const response = await axios.post('http://localhost:8181/api/carts', categoryIds);
-  
+
       setShowOverlay(true);
       setTimeout(() => {
         setShowOverlay(false);
@@ -74,7 +83,6 @@ const SummaryCheckoutPage = () => {
       console.error('Error:', error);
     }
   };
-  
 
   const handleClosePaymentOverlay = () => {
     Cookies.remove('Step1');
@@ -88,12 +96,11 @@ const SummaryCheckoutPage = () => {
     window.location.href = '/user';
   };
 
-
   return (
     <Container fluid>
       <Row>
         <Col sm={12}>
-            <h2>SUMMARY</h2>
+          <h2>SUMMARY</h2>
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -146,6 +153,12 @@ const SummaryCheckoutPage = () => {
                 <td>{selectedFood ? selectedFood.name : 'No food service selected'}</td>
                 <td>${selectedFood ? parseFloat(selectedFood.price).toFixed(2) : '0.00'}</td>
               </tr>
+              <tr>
+                <td>8</td>
+                <td>Date</td>
+                <td>{selectedDate}</td>
+                <td></td> 
+              </tr>
             </tbody>
           </Table>
         </Col>
@@ -175,26 +188,27 @@ const SummaryCheckoutPage = () => {
                     </tr>
                   </tbody>
                 </Table>
-                <center><Button variant="primary" onClick={handleProceedToCart}>Proceed to Cart Page</Button></center>
+                <center><Button variant="warning" onClick={handleProceedToCart}>Proceed to Checkout</Button></center>
               </Card.Body>
             </Card>
           </div>
         </Col>
       </Row>
 
+      {/* Overlay for payment processing */}
       {showOverlay && (
-  <div className="overlay" style={{ width: '100%', height: '100%' }}>
-  <Card className="text-center" style={{ width: '300px',height:'500px' }}>
-    <Card.Body>
-      <iframe src="src/assets/images/pay.png" style={{ width: '100%', height: '100%', border: 'none' ,position:'sticky'}} />
-    </Card.Body>
-  </Card>
-</div>
+        <div className="overlay" style={{ width: '100%', height: '100%' }}>
+          <Card className="text-center" style={{ width: '300px', height: '500px' }}>
+            <Card.Body>
+              {/* You can adjust the content of the overlay */}
+              <iframe src="src/assets/images/pay.png" style={{ width: '100%', height: '100%', border: 'none', position: 'sticky' }} />
+            </Card.Body>
+          </Card>
+        </div>
+      )}
 
-)}
-
-{/* Payment successful overlay */}
-{showPaymentOverlay && (
+      {/* Payment successful overlay */}
+      {showPaymentOverlay && (
         <div className="overlay">
           <Card className="text-center">
             <Card.Body style={{ background: 'rgb(242, 248, 255)' }}>
@@ -210,4 +224,5 @@ const SummaryCheckoutPage = () => {
   );
 };
 
-export default SummaryCheckoutPage;
+export default Step8;
+
