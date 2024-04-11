@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import CaveatFont from '../components/CaveatFont';
-import cake from '/Users/dharanidharansenthilkumar/Projects/event_management/FRONTEND/event_front/src/assets/images/cake.webp';
+import cake from '../assets/images/cake.webp';
 import effiency from '../assets/images/effiency.avif';
 import excl1 from '../assets/images/excellence.avif';
 import perfect from '../assets/images/Perfection.avif';

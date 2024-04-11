@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Card, Form, Button, Row, Col, Toast } from 'react-bootstrap';
 import { GoogleLogin } from 'react-google-login';
 import axios from 'axios';
-import loginImage from '/Users/dharanidharansenthilkumar/Projects/event_management/FRONTEND/event_front/src/assets/images/login2.jpg';
+import loginImage from '../assets/images/login2.jpg';
 import Header from '../components/Brand';
 import Footer from '../components/Footer';
 import '../assets/css/Login.css';
@@ -51,13 +51,7 @@ const Login = () => {
       setErrorMessage('Login failed. Please try again.');
     }
   };
-  const responseGoogleSuccess = (response) => {
-    console.log('Google Login Success:', response);
-  };
 
-  const responseGoogleFailure = (error) => {
-    console.error('Google Login Failure:', error);
-  };
   useEffect(() => {
     if (loginSuccess) {
       window.location.href = '/home';
@@ -99,14 +93,10 @@ const Login = () => {
                   </div>
 
                   <div className="text-center mt-3">
-                    <p>
-                      Don't have an account? <Link to="/register">Register</Link>
-                    </p>
+                    <p>Don't have an account? <Link to="/register">Register</Link></p>
                     <GoogleLogin
                       clientId="YOUR_GOOGLE_CLIENT_ID"
                       buttonText="Login with Google"
-                      onSuccess={responseGoogleSuccess}
-                      onFailure={responseGoogleFailure}
                       cookiePolicy={'single_host_origin'}
                       className="google-login-button"
                     />
