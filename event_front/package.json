@@ -17,6 +17,7 @@
     "@mui/icons-material": "^5.15.10",
     "@mui/lab": "^5.0.0-alpha.169",
     "@mui/material": "^5.15.14",
+    "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "cdbreact": "^1.5.18",
     "date-fns": "^3.6.0",
